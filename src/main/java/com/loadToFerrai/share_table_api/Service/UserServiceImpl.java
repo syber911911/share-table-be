@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,18 +25,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean validateDuplicatedUser(String userAgentId) {
-        return userRepository.findOptionalByUserAgentId(userAgentId).isPresent();
+    public Boolean validateDuplicatedUser() {
+//        return userRepository.findOptionalByUserAgentId(userAgentId).isPresent();
+        return null;
     }
 
     @Override
     public User findUser(String userAgentId) {
         return userRepository.findUserByUserAgentId(userAgentId);
+//        return userRepository.findOptionalByUserAgentId(userAgentId);
+    }
+
+    @Override
+    public UserDTO findUserDTO(String userAgentId) {
+        return toDTO(userRepository.findUserByUserAgentId(userAgentId));
     }
 
     @Override
     public List<User> findAllUser() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<UserDTO> findAllUserDTO() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
