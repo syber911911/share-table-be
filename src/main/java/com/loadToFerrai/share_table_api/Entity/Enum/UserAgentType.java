@@ -3,16 +3,14 @@ package com.loadToFerrai.share_table_api.Entity.Enum;
 import lombok.Getter;
 
 @Getter
-public enum Gender {
-
-    MALE("남성"),
-    FEMALE("여성"),
-    UNSPECIFIED("미지정")
+public enum UserAgentType {
+    APPLE("애플"),
+    KAKAO("카카오")
     ;
 
     private final String label;
 
-    Gender(String label) {
+    UserAgentType(String label) {
         this.label = label;
     }
 }

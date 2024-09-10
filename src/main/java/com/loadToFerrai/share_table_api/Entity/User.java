@@ -1,5 +1,8 @@
 package com.loadToFerrai.share_table_api.Entity;
 
+import com.loadToFerrai.share_table_api.Entity.Enum.Gender;
+import com.loadToFerrai.share_table_api.Entity.Enum.UserAgentType;
+import com.loadToFerrai.share_table_api.Entity.Enum.UserAuthorityType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,16 +22,26 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    private String emailAddress;
-    private String phoneNumber;
-    private String gender; // todo Enum으로 변경
-    private Integer age;
+    private String userName;
+    private String userEmailAddress;
+    private String userAgeRange;
+    private String userProfileNickname;
+    private String userProfileIMG;
+    private Gender userGender;
+    private UserAuthorityType userAuthorityType;
+    private UserAgentType userAgentType;
 
     @Builder
-    public User(String emailAddress, String phoneNumber, String gender, Integer age) {
-        this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
-        this.gender = gender;
-        this.age = age;
+    public User(String userName, String userEmailAddress, String userAgeRange,
+                String userProfileNickname, String userProfileIMG, Gender userGender,
+                UserAuthorityType userAuthorityType, UserAgentType userAgentType) {
+        this.userName = userName;
+        this.userEmailAddress = userEmailAddress;
+        this.userAgeRange = userAgeRange;
+        this.userProfileNickname = userProfileNickname;
+        this.userProfileIMG = userProfileIMG;
+        this.userGender = userGender;
+        this.userAuthorityType = userAuthorityType;
+        this.userAgentType = userAgentType;
     }
 }
