@@ -26,14 +26,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean validateDuplicatedUser() {
-//        return userRepository.findOptionalByUserAgentId(userAgentId).isPresent();
+        //todo 필요할까? Optional 검사로 하면 되지 않나 싶기도
         return null;
     }
 
     @Override
     public User findUser(String userAgentId) {
         return userRepository.findUserByUserAgentId(userAgentId);
-//        return userRepository.findOptionalByUserAgentId(userAgentId);
     }
 
     @Override

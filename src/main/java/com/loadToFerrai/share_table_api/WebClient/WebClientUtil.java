@@ -11,9 +11,9 @@ public class WebClientUtil {
     @Value("${accessTokenRequestApi.kakao}")
     private String kakaoRequestApi;
 
-    public static KakaoResponseDTO getKakaoUserInfo(String accessToken) {
+    public KakaoResponseDTO getKakaoUserInfo(String accessToken) {
         WebClient kakoAuthorization = WebClient.builder()
-                .baseUrl("")
+                .baseUrl(kakaoRequestApi)
                 .defaultHeader("Authorization", accessToken)
                 .defaultHeader("content-type", "application/x-www-form-urlencoded;charset=UTF-8")
                 .build();
@@ -23,6 +23,5 @@ public class WebClientUtil {
                 .retrieve()
                 .bodyToMono(KakaoResponseDTO.class)
                 .block();
-
     }
 }
