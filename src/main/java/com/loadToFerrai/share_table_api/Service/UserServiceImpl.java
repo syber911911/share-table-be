@@ -42,6 +42,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserOptional(String userAgentId) {
+        return userRepository.findOptionalByUserAgentId(userAgentId);
+    }
+
+    @Override
+    public UserDTO findUserDTOOptional(String userAgentId) {
+        UserDTO emptyUserDTO = new UserDTO();
+        return userRepository.findOptionalByUserAgentId(userAgentId)
+                .map(this::toDTO)
+                .orElse(emptyUserDTO);
+    }
+
+    @Override
     public List<User> findAllUser() {
         return userRepository.findAll();
     }
@@ -62,10 +75,9 @@ public class UserServiceImpl implements UserService {
                 .userAgeRange(user.getUserAgeRange())
                 .userProfileNickname(user.getUserProfileNickname())
                 .userProfileIMG(user.getUserProfileIMG())
-                /*.userAgentId(user.getUserAgentId())*/
                 .userGender(user.getUserGender())
+                .userAgentInfo(user.getUserAgentInfo())
                 .userAuthorityType(user.getUserAuthorityType())
-                .userAgentType(user.getUserAgentType())
                 .build();
     }
 

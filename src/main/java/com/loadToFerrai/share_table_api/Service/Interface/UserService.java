@@ -15,6 +15,9 @@ public interface UserService {
     User findUser(String userAgentId);
     UserDTO findUserDTO(String userAgentId);
 
+    Optional<User> findUserOptional(String userAgentId);
+    UserDTO findUserDTOOptional(String userAgentId);
+
     List<User> findAllUser();
     List<UserDTO> findAllUserDTO();
 

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaoAccount {
     private Boolean profile_needs_agreement;
     private Boolean profile_nickname_needs_agreement;

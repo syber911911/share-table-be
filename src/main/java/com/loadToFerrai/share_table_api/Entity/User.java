@@ -1,12 +1,9 @@
 package com.loadToFerrai.share_table_api.Entity;
 
+import com.loadToFerrai.share_table_api.Entity.Embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.Entity.Enum.Gender;
-import com.loadToFerrai.share_table_api.Entity.Enum.UserAgentType;
 import com.loadToFerrai.share_table_api.Entity.Enum.UserAuthorityType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,23 +24,22 @@ public class User {
     private String userAgeRange;
     private String userProfileNickname;
     private String userProfileIMG;
-    private String userAgentId;
     private Gender userGender;
+    @Embedded
+    private UserAgentInfo userAgentInfo;
     private UserAuthorityType userAuthorityType;
-    private UserAgentType userAgentType;
 
     @Builder
     public User(String userName, String userEmailAddress, String userAgeRange,
-                String userProfileNickname, String userProfileIMG, String userAgentId,
-                Gender userGender, UserAuthorityType userAuthorityType, UserAgentType userAgentType) {
+                String userProfileNickname, String userProfileIMG,
+                Gender userGender, UserAgentInfo userAgentType, UserAuthorityType userAuthorityType) {
         this.userName = userName;
         this.userEmailAddress = userEmailAddress;
         this.userAgeRange = userAgeRange;
         this.userProfileNickname = userProfileNickname;
         this.userProfileIMG = userProfileIMG;
-        this.userAgentId = userAgentId;
         this.userGender = userGender;
+        this.userAgentInfo = userAgentType;
         this.userAuthorityType = userAuthorityType;
-        this.userAgentType = userAgentType;
     }
 }
