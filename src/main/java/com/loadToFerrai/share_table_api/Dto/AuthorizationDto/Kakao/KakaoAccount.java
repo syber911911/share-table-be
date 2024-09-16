@@ -1,14 +1,11 @@
 package com.loadToFerrai.share_table_api.Dto.AuthorizationDto.Kakao;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Getter @Setter
+@AllArgsConstructor
 public class KakaoAccount {
     private Boolean profile_needs_agreement;
     private Boolean profile_nickname_needs_agreement;

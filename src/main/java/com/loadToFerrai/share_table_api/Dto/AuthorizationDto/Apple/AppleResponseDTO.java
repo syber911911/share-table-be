@@ -7,4 +7,5 @@ import lombok.Setter;
 
 @Getter @Setter
 public class AppleResponseDTO {
+    private Long id;
 }

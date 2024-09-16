@@ -30,6 +30,11 @@ public class User {
     private UserAuthorityType userAuthorityType;
 
     @Builder
+    public User(UserAgentInfo userAgentInfo) {
+        this.userAgentInfo = userAgentInfo;
+    }
+
+    @Builder
     public User(String userName, String userEmailAddress, String userAgeRange,
                 String userProfileNickname, String userProfileIMG,
                 Gender userGender, UserAgentInfo userAgentType, UserAuthorityType userAuthorityType) {
