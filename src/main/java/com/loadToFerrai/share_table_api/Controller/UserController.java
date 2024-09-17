@@ -7,10 +7,10 @@ import com.loadToFerrai.share_table_api.Entity.Embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.Entity.User;
 import com.loadToFerrai.share_table_api.Exception.ExistUserException;
 import com.loadToFerrai.share_table_api.Service.Interface.UserService;
-import com.loadToFerrai.share_table_api.WebClient.WebClientUtil;
+import com.loadToFerrai.share_table_api.Util.JWTDecoder.AppleJWTUtil;
+import com.loadToFerrai.share_table_api.Util.WebClient.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +26,7 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final WebClientUtil webClientUtil;
+    private final AppleJWTUtil appleJWTUtil;
 
     private HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -39,18 +39,14 @@ public class UserController {
         UserDTO findUser = userService.findUserDTOOptional(requestBody.getAgentUserId());
 
         if (findUser.getUserAgentInfo() == null) {
-            // Todo AccessToken 해석 호출
-            // Todo UserAgent 분기문 처리
-
-            Long agentUserId = switch (requestBody.getAgentType()) {
-                case KAKAO -> webClientUtil.getKakaoUserInfo(requestBody.getAccessToken()).getId();
-                case APPLE -> webClientUtil.getAppleUserInfo(requestBody.getAccessToken()).getId();
+            String agentUserId = switch (requestBody.getAgentType()) {
+                case KAKAO -> webClientUtil.getKakaoUserInfo(requestBody.getToken()).getId().toString();
+                case APPLE -> appleJWTUtil.decodeIdToken(requestBody.getToken()).getId();
             };
 
             User user = new User(new UserAgentInfo(agentUserId, requestBody.getAgentType()));
             userService.signUp(user);
         }
-
 
         return ResponseEntity.ok()
                 .headers(getHeaders())

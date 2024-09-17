@@ -1,6 +1,6 @@
 package com.loadToFerrai.share_table_api.config;
 
-import com.loadToFerrai.share_table_api.WebClient.WebClientUtil;
+import com.loadToFerrai.share_table_api.Util.WebClient.WebClientUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;

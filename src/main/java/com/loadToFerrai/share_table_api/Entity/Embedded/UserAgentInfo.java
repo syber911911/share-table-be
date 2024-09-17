@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserAgentInfo {
 
-    private Long userAgentId;
+    private String userAgentId;
     private UserAgentType userAgentType;
 
     @Builder
-    public UserAgentInfo(Long userAgentId, UserAgentType userAgentType) {
+    public UserAgentInfo(String userAgentId, UserAgentType userAgentType) {
         this.userAgentId = userAgentId;
         this.userAgentType = userAgentType;
     }

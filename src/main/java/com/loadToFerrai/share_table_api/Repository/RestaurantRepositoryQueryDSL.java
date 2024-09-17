@@ -2,9 +2,9 @@ package com.loadToFerrai.share_table_api.Repository;
 
 
 import com.loadToFerrai.share_table_api.Entity.Embedded.Address;
-import com.loadToFerrai.share_table_api.Entity.QRestaurant;
 import com.loadToFerrai.share_table_api.Entity.Restaurant;
 import com.loadToFerrai.share_table_api.Repository.Interface.RestaurantRepository;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.loadToFerrai.share_table_api.Entity.QRestaurant.restaurant;
+import static com.loadToFerrai.share_table_api.Repository.Util.QueryDSLUtil.nullSafeBuilder;
+
+// https://velog.io/@balparang/Querydsl-BooleanExpression-%EB%A5%BC-%EC%A1%B0%ED%95%A9%ED%95%A0-%EB%95%8C-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-NPE-%EB%8C%80%EC%B2%98%ED%95%98%EA%B8%B0
+// booleanBuilder Null-Safe
 
 @Repository
 @RequiredArgsConstructor
@@ -21,7 +25,6 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
 
     private final EntityManager em;
     private final JPAQueryFactory jpaQueryFactory;
-
 
     @Override
     public void save(Restaurant restaurant) {
@@ -54,43 +57,35 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
     }
 
     @Override
-    public List<Restaurant> findByAddressFull(Address address) {
+    public List<Restaurant> findByAddress(Address address) {
         return jpaQueryFactory
                 .selectFrom(restaurant)
-                .where(
-                        restaurant.address.doName.eq(address.getDoName())
-                        .and(restaurant.address.siName.eq(address.getSiName()))
-                        .and(restaurant.address.roadName.eq(address.getRoadName()))
-                        .and(restaurant.address.detail.eq(address.getDetail()))
-                )
+                .where(matchedAddressChecker(address))
                 .fetch();
+        // TODO Pagination 추가 요망
     }
 
-    @Override
-    public List<Restaurant> findByAddressDoName(Address address) {
-        return jpaQueryFactory
-                .selectFrom(restaurant)
-                .where(restaurant.address.doName.eq(address.getDoName()))
-                .fetch();
+    private BooleanBuilder matchedAddressChecker(Address address) {
+        return doContains(address.getDoName())
+                .and(siContains(address.getSiName()))
+                .and(roadContains(address.getRoadName()))
+                .and(detailEq(address.getDetail()));
     }
 
-    @Override
-    public List<Restaurant> findByAddressSiName(Address address) {
-        return jpaQueryFactory
-                .selectFrom(restaurant)
-                .where(
-                        restaurant.address.doName.eq(address.getDoName())
-                        .and(restaurant.address.siName.eq(address.getSiName()))
-                )
-                .fetch();
+    private BooleanBuilder doContains(String doName) {
+        return nullSafeBuilder(() -> restaurant.address.doName.contains(doName));
     }
 
-    @Override
-    public List<Restaurant> findByAddressRoadName(Address address) {
-        return jpaQueryFactory
-                .selectFrom(restaurant)
-                .where(restaurant.address.roadName.eq(address.getRoadName()))
-                .fetch();
+    private BooleanBuilder siContains(String siName) {
+        return nullSafeBuilder(() -> restaurant.address.siName.contains(siName));
+    }
+
+    private BooleanBuilder roadContains(String roadName) {
+        return nullSafeBuilder(() -> restaurant.address.roadName.contains(roadName));
+    }
+
+    private BooleanBuilder detailEq(String detail) {
+        return nullSafeBuilder(() -> restaurant.address.detail.eq(detail));
     }
 
 }

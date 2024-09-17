@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginRequestBody {
     private String agentUserId;
-    private String accessToken;
+    private String token;
     private UserAgentType agentType;
 }

@@ -15,10 +15,6 @@ public interface RestaurantRepository {
 
     List<Restaurant> findAll();
     List<Restaurant> findByName(String restaurantName);
-
-    List<Restaurant> findByAddressFull(Address address);
-    List<Restaurant> findByAddressDoName(Address address);
-    List<Restaurant> findByAddressSiName(Address address);
-    List<Restaurant> findByAddressRoadName(Address address);
-
+    List<Restaurant> findByAddress(Address address);
+    // TODO 식당 리스트 페이징 추가해야함
 }

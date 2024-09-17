@@ -13,4 +13,7 @@ public enum UserAgentType {
     UserAgentType(String label) {
         this.label = label;
     }
+
+    //TODO JSON -> ENUM 변환 메서드 만들기
+    // https://antdev.tistory.com/76
 }
