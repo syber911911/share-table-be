@@ -1,5 +1,6 @@
 package com.loadToFerrai.share_table_api.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
@@ -14,6 +15,10 @@ public enum UserAgentType {
         this.label = label;
     }
 
-    //TODO JSON -> ENUM 변환 메서드 만들기
-    // https://antdev.tistory.com/76
+
+    @JsonCreator
+    public static UserAgentType jsonToEnum(String json) {
+        return UserAgentType.valueOf(json.toUpperCase());
+    }
+
 }
