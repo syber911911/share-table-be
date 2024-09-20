@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    void signUp(User user);
+    UserDto signUp(User user);
     Boolean validateDuplicatedUser() throws ExistUserException;
 
     User findUser(String userAgentId);

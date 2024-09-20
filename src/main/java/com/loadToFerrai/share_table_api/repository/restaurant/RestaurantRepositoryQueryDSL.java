@@ -26,8 +26,9 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public void save(Restaurant restaurant) {
+    public Restaurant save(Restaurant restaurant) {
         em.persist(restaurant);
+        return restaurant;
     }
 
     @Override

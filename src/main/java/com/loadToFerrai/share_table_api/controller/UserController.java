@@ -45,11 +45,11 @@ public class UserController {
             };
 
             User user = new User(new UserAgentInfo(agentUserId, requestBody.getAgentType()));
-            userService.signUp(user);
+            findUser = userService.signUp(user);
         }
 
         return ResponseEntity.ok()
                 .headers(getHeaders())
-                .body(new ResponseDto<String>(Boolean.TRUE, "success"));
+                .body(new ResponseDto<UserDto>(Boolean.TRUE, findUser));
     }
 }

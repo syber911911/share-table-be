@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RestaurantService {
-    void registerRestaurant(Restaurant restaurant);
+    RestaurantDto registerRestaurant(Restaurant restaurant);
 
     Restaurant findRestaurant(Long id);
     Optional<Restaurant> findRestaurantOptional(Long id);

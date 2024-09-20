@@ -20,8 +20,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
     @Override
-    public void registerRestaurant(Restaurant restaurant) {
-        restaurantRepository.save(restaurant);
+    public RestaurantDto registerRestaurant(Restaurant restaurant) {
+        return toDTO(restaurantRepository.save(restaurant));
     }
 
     @Override
