@@ -3,6 +3,7 @@ package com.loadToFerrai.share_table_api.controller;
 import com.loadToFerrai.share_table_api.dto.authorizationDto.LoginRequestBody;
 import com.loadToFerrai.share_table_api.dto.ResponseDto;
 import com.loadToFerrai.share_table_api.dto.UserDto;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.exception.ExistUserException;
@@ -51,5 +52,19 @@ public class UserController {
         return ResponseEntity.ok()
                 .headers(getHeaders())
                 .body(new ResponseDto<UserDto>(Boolean.TRUE, findUser));
+    }
+
+    @PostMapping("/dd")
+    public ResponseEntity<ResponseDto> registerUserDetail(@RequestBody RegisterUserDetail registerUserDetail) throws ExistUserException {
+        if (userService.validateDuplicatedNickName(registerUserDetail.getUserProfileNickname())) {
+            return ResponseEntity.ok()
+                    .headers(getHeaders())
+                    .body(new ResponseDto<String>(Boolean.FALSE, "이미 존재하는 닉네임입니다."));
+        }
+
+        // 업데이트 쿼리/서비스 작성
+        return ResponseEntity.ok()
+                .headers(getHeaders())
+                .body(new ResponseDto<UserDto>());
     }
 }

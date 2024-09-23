@@ -17,4 +17,7 @@ public interface UserRepository {
 
     User findUserByUserAgentId(String userAgentId);
     Optional<User> findOptionalByUserAgentId(String userAgentId);
+
+    User findUserByUserProfileNickName(String userProfileNickName);
+    Optional<User> findOptionalByUserProfileNickName(String userProfileNickName);
 }

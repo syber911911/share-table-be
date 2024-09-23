@@ -24,9 +24,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean validateDuplicatedUser() {
-        //todo 필요할까? Optional 검사로 하면 되지 않나 싶기도
-        return null;
+    public Boolean validateDuplicatedNickName(String nickName) {
+        return userRepository.findOptionalByUserProfileNickName(nickName).isPresent();
     }
 
     @Override
@@ -50,6 +49,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findOptionalByUserAgentId(userAgentId)
                 .map(this::toDTO)
                 .orElse(emptyUserDTO);
+    }
+
+    @Override
+    public User findUserByNickName(String nickName) {
+        return userRepository.findUserByUserProfileNickName(nickName);
+    }
+
+    @Override
+    public UserDto findUserDTOByNickName(String nickName) {
+        return toDTO(userRepository.findUserByUserAgentId(nickName));
     }
 
     @Override

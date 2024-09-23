@@ -58,4 +58,22 @@ public class UserRepositoryQueryDSL implements UserRepository {
                         .fetchOne()
         );
     }
+
+    @Override
+    public User findUserByUserProfileNickName(String userProfileNickName) {
+        return jpaQueryFactory
+                .selectFrom(user)
+                .where(user.userProfileNickname.eq(userProfileNickName))
+                .fetchOne();
+    }
+
+    @Override
+    public Optional<User> findOptionalByUserProfileNickName(String userProfileNickName) {
+        return Optional.ofNullable(
+                jpaQueryFactory
+                        .selectFrom(user)
+                        .where(user.userProfileNickname.eq(userProfileNickName))
+                        .fetchOne()
+        );
+    }
 }
