@@ -1,7 +1,10 @@
 package com.loadToFerrai.share_table_api.service.user;
 
 import com.loadToFerrai.share_table_api.dto.UserDto;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
 import com.loadToFerrai.share_table_api.entity.User;
+import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
+import com.loadToFerrai.share_table_api.entity.enums.UserAgentType;
 import com.loadToFerrai.share_table_api.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,24 +32,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUser(String userAgentId) {
-        return userRepository.findUserByUserAgentId(userAgentId);
+    public User findUser(UserAgentInfo userAgentInfo) {
+        return userRepository.findUserByUserAgentId(userAgentInfo);
     }
 
     @Override
-    public UserDto findUserDTO(String userAgentId) {
-        return toDTO(userRepository.findUserByUserAgentId(userAgentId));
+    public UserDto findUserDTO(UserAgentInfo userAgentInfo) {
+        return toDTO(userRepository.findUserByUserAgentId(userAgentInfo));
     }
 
     @Override
-    public Optional<User> findUserOptional(String userAgentId) {
-        return userRepository.findOptionalByUserAgentId(userAgentId);
+    public Optional<User> findUserOptional(UserAgentInfo userAgentInfo) {
+        return userRepository.findOptionalByUserAgentId(userAgentInfo);
     }
 
     @Override
-    public UserDto findUserDTOOptional(String userAgentId) {
+    public UserDto findUserDTOOptional(UserAgentInfo userAgentInfo) {
         UserDto emptyUserDTO = new UserDto();
-        return userRepository.findOptionalByUserAgentId(userAgentId)
+        return userRepository.findOptionalByUserAgentId(userAgentInfo)
                 .map(this::toDTO)
                 .orElse(emptyUserDTO);
     }
@@ -58,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserDTOByNickName(String nickName) {
-        return toDTO(userRepository.findUserByUserAgentId(nickName));
+        return toDTO(userRepository.findUserByUserProfileNickName(nickName));
     }
 
     @Override
@@ -72,6 +75,12 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean registerUserDetail(RegisterUserDetail registerUserDetail) {
+        Long isSuccess = userRepository.updateUserDetail(registerUserDetail);
+        return isSuccess != 0;
     }
 
     @Override

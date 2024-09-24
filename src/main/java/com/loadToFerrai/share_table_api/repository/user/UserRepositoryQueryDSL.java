@@ -1,8 +1,13 @@
 package com.loadToFerrai.share_table_api.repository.user;
 
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
 import com.loadToFerrai.share_table_api.entity.User;
+import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
+import com.loadToFerrai.share_table_api.entity.enums.Gender;
+import com.loadToFerrai.share_table_api.entity.enums.UserAgentType;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -41,22 +46,40 @@ public class UserRepositoryQueryDSL implements UserRepository {
     }
 
     @Override
-    public User findUserByUserAgentId(String userAgentId) {
+    public User findUserByUserAgentId(UserAgentInfo userAgentInfo) {
         return jpaQueryFactory
                 .selectFrom(user)
-                .where(user.userAgentInfo.userAgentId.eq(userAgentId))
+                .where(user.userAgentInfo.userAgentId.eq(userAgentInfo.getUserAgentId())
+                        .and(user.userAgentInfo.userAgentType.eq(userAgentInfo.getUserAgentType())))
                 .fetchOne();
     }
 
 
     @Override
-    public Optional<User> findOptionalByUserAgentId(String userAgentId) {
+    public Optional<User> findOptionalByUserAgentId(UserAgentInfo userAgentInfo) {
         return Optional.ofNullable(
                 jpaQueryFactory
                         .selectFrom(user)
-                        .where(user.userAgentInfo.userAgentId.eq(userAgentId))
+                        .where(user.userAgentInfo.userAgentId.eq(userAgentInfo.getUserAgentId())
+                                .and(user.userAgentInfo.userAgentType.eq(userAgentInfo.getUserAgentType())))
                         .fetchOne()
         );
+    }
+
+    @Override
+    public Long updateUserDetail(RegisterUserDetail userDetail) {
+        return jpaQueryFactory
+                .update(user)
+                .set(user.userName, userDetail.getUserName())
+                .set(user.userEmailAddress, userDetail.getUserEmailAddress())
+                .set(user.userAgeRange, userDetail.getUserAgeRange())
+                .set(user.userProfileNickname, userDetail.getUserProfileNickname())
+                .set(user.userProfileIMG, userDetail.getUserProfileIMG())
+                .set(user.userGender, userDetail.getUserGender())
+                .where(user.userAgentInfo.userAgentId.eq(userDetail.getUserAgentInfo().getUserAgentId())
+                        .and(user.userAgentInfo.userAgentId.eq(userDetail.getUserAgentInfo().getUserAgentType().getValue())))
+                .execute();
+
     }
 
     @Override

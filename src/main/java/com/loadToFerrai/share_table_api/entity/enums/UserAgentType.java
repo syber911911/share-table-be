@@ -5,14 +5,16 @@ import lombok.Getter;
 
 @Getter
 public enum UserAgentType {
-    APPLE("애플"),
-    KAKAO("카카오")
+    APPLE("애플","APPLE"),
+    KAKAO("카카오","KAKAO")
     ;
 
     private final String label;
+    private final String value;
 
-    UserAgentType(String label) {
+    UserAgentType(String label, String value) {
         this.label = label;
+        this.value = value;
     }
 
 

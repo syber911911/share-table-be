@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 
@@ -36,16 +33,16 @@ public class UserController {
     }
 
     @PostMapping("/") // TODO 반환타입과 URI는 차후 설정
-    public ResponseEntity<ResponseDto> checkUserInfo(@RequestBody LoginRequestBody requestBody) throws ExistUserException {
-        UserDto findUser = userService.findUserDTOOptional(requestBody.getAgentUserId());
+    public ResponseEntity<ResponseDto> checkUserInfo(@RequestBody LoginRequestBody requestBody) {
+        UserDto findUser = userService.findUserDTOOptional(requestBody.getUserAgentInfo());
 
         if (findUser.getUserAgentInfo() == null) {
-            String agentUserId = switch (requestBody.getAgentType()) {
+            String agentUserId = switch (requestBody.getUserAgentInfo().getUserAgentType()) {
                 case KAKAO -> webClientUtil.getKakaoUserInfo(requestBody.getToken()).getId().toString();
                 case APPLE -> appleJWTUtil.decodeIdToken(requestBody.getToken()).getId();
             };
 
-            User user = new User(new UserAgentInfo(agentUserId, requestBody.getAgentType()));
+            User user = new User(new UserAgentInfo(agentUserId, requestBody.getUserAgentInfo().getUserAgentType()));
             findUser = userService.signUp(user);
         }
 
@@ -54,17 +51,35 @@ public class UserController {
                 .body(new ResponseDto<UserDto>(Boolean.TRUE, findUser));
     }
 
-    @PostMapping("/dd")
-    public ResponseEntity<ResponseDto> registerUserDetail(@RequestBody RegisterUserDetail registerUserDetail) throws ExistUserException {
-        if (userService.validateDuplicatedNickName(registerUserDetail.getUserProfileNickname())) {
-            return ResponseEntity.ok()
-                    .headers(getHeaders())
-                    .body(new ResponseDto<String>(Boolean.FALSE, "이미 존재하는 닉네임입니다."));
+    @GetMapping("/d")
+    public ResponseEntity<ResponseDto> duplicatedUserNameChecker(@RequestParam String userName) throws ExistUserException {
+        ResponseDto<String> response = new ResponseDto<>(Boolean.TRUE, "사용할 수 있는 닉네임 입니다.");
+
+        if (!userService.validateDuplicatedNickName(userName)) {
+            response.setSuccess(Boolean.FALSE);
+            response.setResult("사용할 수 없는 닉네임 입니다.");
         }
 
-        // 업데이트 쿼리/서비스 작성
         return ResponseEntity.ok()
                 .headers(getHeaders())
-                .body(new ResponseDto<UserDto>());
+                .body(response);
+    }
+
+    @PostMapping("/dd")
+    public ResponseEntity<ResponseDto> registerUserDetail(@RequestBody RegisterUserDetail registerUserDetail) throws ExistUserException {
+
+        Boolean isSuccess = userService.registerUserDetail(registerUserDetail);
+
+        if (!isSuccess) {
+            return ResponseEntity.ok()
+                    .headers(getHeaders())
+                    .body(new ResponseDto<String>(Boolean.FALSE, "updateFailed"));
+        }
+
+        UserDto userDTO = userService.findUserDTO(registerUserDetail.getUserAgentInfo());
+
+        return ResponseEntity.ok()
+                .headers(getHeaders())
+                .body(new ResponseDto<UserDto>(Boolean.TRUE, userDTO));
     }
 }
