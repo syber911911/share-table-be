@@ -4,7 +4,6 @@ import com.loadToFerrai.share_table_api.dto.UserDto;
 import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
-import com.loadToFerrai.share_table_api.entity.enums.UserAgentType;
 import com.loadToFerrai.share_table_api.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

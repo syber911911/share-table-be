@@ -9,7 +9,6 @@ public enum Gender {
     MALE("남성","MALE"),
     FEMALE("여성", "FEMALE"),
     UNSPECIFIED("미지정", "UNSPECIFIED");
-    ;
 
     private final String label;
     private final String value;

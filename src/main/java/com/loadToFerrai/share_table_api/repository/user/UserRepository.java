@@ -4,7 +4,6 @@ package com.loadToFerrai.share_table_api.repository.user;
 import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
-import com.loadToFerrai.share_table_api.entity.enums.UserAgentType;
 
 import java.util.List;
 import java.util.Optional;
