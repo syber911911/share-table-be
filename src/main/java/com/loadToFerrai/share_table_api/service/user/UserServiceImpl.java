@@ -45,17 +45,22 @@ public class UserServiceImpl implements UserService {
         return userRepository.findOptionalByUserAgentId(userAgentInfo);
     }
 
-    @Override
-    public UserDto findUserDTOOptional(UserAgentInfo userAgentInfo) {
-        UserDto emptyUserDTO = new UserDto();
-        return userRepository.findOptionalByUserAgentId(userAgentInfo)
-                .map(this::toDTO)
-                .orElse(emptyUserDTO);
-    }
+//    @Override
+//    public UserDto findUserDTOOptional(UserAgentInfo userAgentInfo) {
+//        UserDto emptyUserDTO = new UserDto();
+//        return userRepository.findOptionalByUserAgentId(userAgentInfo)
+//                .map(this::toDTO)
+//                .orElse(emptyUserDTO);
+//    }
 
     @Override
     public User findUserByNickName(String nickName) {
         return userRepository.findUserByUserProfileNickName(nickName);
+    }
+
+    @Override
+    public Optional<User> findUserOptionalByNickName(String nickName) {
+        return userRepository.findOptionalByUserProfileNickName(nickName);
     }
 
     @Override

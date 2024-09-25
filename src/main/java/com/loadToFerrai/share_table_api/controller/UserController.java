@@ -4,13 +4,16 @@ import com.loadToFerrai.share_table_api.dto.authorizationDto.LoginRequestBody;
 import com.loadToFerrai.share_table_api.dto.ResponseDto;
 import com.loadToFerrai.share_table_api.dto.UserDto;
 import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RequestUserInfo;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.exception.ExistUserException;
 import com.loadToFerrai.share_table_api.service.user.UserService;
 import com.loadToFerrai.share_table_api.util.JWTDecoder.AppleJWTUtil;
 import com.loadToFerrai.share_table_api.util.WebClient.WebClientUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +35,19 @@ public class UserController {
         return httpHeaders;
     }
 
-    @PostMapping("/") // TODO 반환타입과 URI는 차후 설정
-    public ResponseEntity<ResponseDto> checkUserInfo(@RequestBody LoginRequestBody requestBody) {
-        UserDto findUser = userService.findUserDTOOptional(requestBody.getUserAgentInfo());
+    @GetMapping("/info")
+    public ResponseEntity<ResponseDto> getUserInfo(@RequestBody RequestUserInfo requestUserInfo) {
+        UserDto userDTO = userService.findUserDTO(requestUserInfo.getUserAgentInfo());
+
+        return ResponseEntity.ok()
+                .headers(getHeaders())
+                .body(new ResponseDto<UserDto>(true, userDTO));
+    }
+
+    @PostMapping("/signUp") // TODO 반환타입과 URI는 차후 설정
+    public ResponseEntity<ResponseDto> signUpAndLogin(
+            @RequestBody @Valid LoginRequestBody requestBody) {
+        UserDto findUser = userService.findUserDTO(requestBody.getUserAgentInfo());
 
         if (findUser.getUserAgentInfo() == null) {
             String agentUserId = switch (requestBody.getUserAgentInfo().getUserAgentType()) {
@@ -48,15 +61,16 @@ public class UserController {
 
         return ResponseEntity.ok()
                 .headers(getHeaders())
-                .body(new ResponseDto<UserDto>(Boolean.TRUE, findUser));
+                .body(new ResponseDto<UserDto>(true, findUser));
     }
 
-    @GetMapping("/d")
-    public ResponseEntity<ResponseDto> duplicatedUserNameChecker(@RequestParam String userName) throws ExistUserException {
-        ResponseDto<String> response = new ResponseDto<>(Boolean.TRUE, "사용할 수 있는 닉네임 입니다.");
+    @GetMapping("/availableNickName")
+    public ResponseEntity<ResponseDto> duplicatedUserNameChecker(
+            @RequestParam("userName") @Length(max = 8) @Length(min = 2) String userName) throws ExistUserException {
+        ResponseDto<String> response = new ResponseDto<>(true, "사용할 수 있는 닉네임 입니다.");
 
         if (!userService.validateDuplicatedNickName(userName)) {
-            response.setSuccess(Boolean.FALSE);
+            response.setSuccess(false);
             response.setResult("사용할 수 없는 닉네임 입니다.");
         }
 
@@ -65,21 +79,22 @@ public class UserController {
                 .body(response);
     }
 
-    @PostMapping("/dd")
-    public ResponseEntity<ResponseDto> registerUserDetail(@RequestBody RegisterUserDetail registerUserDetail) throws ExistUserException {
+    @PostMapping("/registerDetail")
+    public ResponseEntity<ResponseDto> registerUserDetail(
+            @RequestBody @Valid RegisterUserDetail registerUserDetail){
 
         Boolean isSuccess = userService.registerUserDetail(registerUserDetail);
 
         if (!isSuccess) {
             return ResponseEntity.ok()
                     .headers(getHeaders())
-                    .body(new ResponseDto<String>(Boolean.FALSE, "updateFailed"));
+                    .body(new ResponseDto<String>(false, "업데이트에 실패했습니다."));
         }
 
         UserDto userDTO = userService.findUserDTO(registerUserDetail.getUserAgentInfo());
 
         return ResponseEntity.ok()
                 .headers(getHeaders())
-                .body(new ResponseDto<UserDto>(Boolean.TRUE, userDTO));
+                .body(new ResponseDto<UserDto>(true, userDTO));
     }
 }

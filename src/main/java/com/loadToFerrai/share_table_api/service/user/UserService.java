@@ -15,12 +15,11 @@ public interface UserService {
     Boolean validateDuplicatedNickName(String nickName) throws ExistUserException;
 
     User findUser(UserAgentInfo userAgentInfo);
+    Optional<User> findUserOptional(UserAgentInfo userAgentInfo);
     UserDto findUserDTO(UserAgentInfo userAgentInfo);
 
-    Optional<User> findUserOptional(UserAgentInfo userAgentInfo);
-    UserDto findUserDTOOptional(UserAgentInfo userAgentInfo);
-
     User findUserByNickName(String nickName);
+    Optional<User> findUserOptionalByNickName(String nickName);
     UserDto findUserDTOByNickName(String nickName);
 
     List<User> findAllUser();
