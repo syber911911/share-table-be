@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestUserInfo {
+public class RequestUserInfoBody {
     @Embedded @NotNull
     private UserAgentInfo userAgentInfo;
 }

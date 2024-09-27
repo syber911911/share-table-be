@@ -1,4 +1,4 @@
-package com.loadToFerrai.share_table_api.dto;
+package com.loadToFerrai.share_table_api.dto.restaurant;
 
 import com.loadToFerrai.share_table_api.entity.embedded.Address;
 import com.loadToFerrai.share_table_api.entity.embedded.RestaurantCategory;

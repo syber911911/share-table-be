@@ -1,7 +1,7 @@
 package com.loadToFerrai.share_table_api.service.user;
 
 import com.loadToFerrai.share_table_api.dto.UserDto;
-import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailBody;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.repository.user.UserRepository;
@@ -82,8 +82,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean registerUserDetail(RegisterUserDetail registerUserDetail) {
-        Long isSuccess = userRepository.updateUserDetail(registerUserDetail);
+    public Boolean registerUserDetail(RegisterUserDetailBody registerUserDetailBody) {
+        Long isSuccess = userRepository.updateUserDetail(registerUserDetailBody);
         return isSuccess != 0;
     }
 

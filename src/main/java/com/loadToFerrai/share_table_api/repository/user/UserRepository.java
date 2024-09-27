@@ -1,7 +1,7 @@
 package com.loadToFerrai.share_table_api.repository.user;
 
 
-import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailBody;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 
@@ -20,7 +20,7 @@ public interface UserRepository {
     User findUserByUserAgentId(UserAgentInfo userAgentInfo);
     Optional<User> findOptionalByUserAgentId(UserAgentInfo userAgentInfo);
 
-    Long updateUserDetail(RegisterUserDetail userDetail);
+    Long updateUserDetail(RegisterUserDetailBody userDetail);
 
     User findUserByUserProfileNickName(String userProfileNickName);
     Optional<User> findOptionalByUserProfileNickName(String userProfileNickName);

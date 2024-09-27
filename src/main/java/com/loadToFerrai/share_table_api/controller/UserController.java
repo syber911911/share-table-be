@@ -3,8 +3,8 @@ package com.loadToFerrai.share_table_api.controller;
 import com.loadToFerrai.share_table_api.dto.authorizationDto.LoginRequestBody;
 import com.loadToFerrai.share_table_api.dto.ResponseDto;
 import com.loadToFerrai.share_table_api.dto.UserDto;
-import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
-import com.loadToFerrai.share_table_api.dto.authorizationDto.RequestUserInfo;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailBody;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RequestUserInfoBody;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.exception.ExistUserException;
@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<ResponseDto> getUserInfo(@RequestBody RequestUserInfo requestUserInfo) {
-        UserDto userDTO = userService.findUserDTO(requestUserInfo.getUserAgentInfo());
+    public ResponseEntity<ResponseDto> getUserInfo(@RequestBody RequestUserInfoBody requestUserInfoBody) {
+        UserDto userDTO = userService.findUserDTO(requestUserInfoBody.getUserAgentInfo());
 
         return ResponseEntity.ok()
                 .headers(getHeaders())
@@ -81,9 +81,9 @@ public class UserController {
 
     @PostMapping("/registerDetail")
     public ResponseEntity<ResponseDto> registerUserDetail(
-            @RequestBody @Valid RegisterUserDetail registerUserDetail){
+            @RequestBody @Valid RegisterUserDetailBody registerUserDetailBody){
 
-        Boolean isSuccess = userService.registerUserDetail(registerUserDetail);
+        Boolean isSuccess = userService.registerUserDetail(registerUserDetailBody);
 
         if (!isSuccess) {
             return ResponseEntity.ok()
@@ -91,7 +91,7 @@ public class UserController {
                     .body(new ResponseDto<String>(false, "업데이트에 실패했습니다."));
         }
 
-        UserDto userDTO = userService.findUserDTO(registerUserDetail.getUserAgentInfo());
+        UserDto userDTO = userService.findUserDTO(registerUserDetailBody.getUserAgentInfo());
 
         return ResponseEntity.ok()
                 .headers(getHeaders())

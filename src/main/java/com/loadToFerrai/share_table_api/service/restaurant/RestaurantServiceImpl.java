@@ -1,7 +1,8 @@
 package com.loadToFerrai.share_table_api.service.restaurant;
 
 
-import com.loadToFerrai.share_table_api.dto.RestaurantDto;
+import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantDto;
+import com.loadToFerrai.share_table_api.dto.restaurant.UpdateRestaurantInfoBody;
 import com.loadToFerrai.share_table_api.entity.embedded.Address;
 import com.loadToFerrai.share_table_api.entity.Restaurant;
 import com.loadToFerrai.share_table_api.repository.restaurant.RestaurantRepository;
@@ -22,6 +23,18 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantDto registerRestaurant(Restaurant restaurant) {
         return toDTO(restaurantRepository.save(restaurant));
+    }
+
+    @Override
+    public boolean updateRestaurantInfo(UpdateRestaurantInfoBody body) {
+        Long isSuccess = restaurantRepository.updateRestaurantInfo(body);
+        return isSuccess != 0;
+    }
+
+    @Override
+    public boolean deleteRestaurantInfo(Long restaurantId) {
+        Long isSuccess = restaurantRepository.deleteRestaurant(restaurantId);
+        return isSuccess != 0;
     }
 
     @Override

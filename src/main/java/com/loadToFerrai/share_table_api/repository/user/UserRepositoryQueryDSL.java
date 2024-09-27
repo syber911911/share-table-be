@@ -1,6 +1,6 @@
 package com.loadToFerrai.share_table_api.repository.user;
 
-import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailBody;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -64,7 +64,7 @@ public class UserRepositoryQueryDSL implements UserRepository {
     }
 
     @Override
-    public Long updateUserDetail(RegisterUserDetail userDetail) {
+    public Long updateUserDetail(RegisterUserDetailBody userDetail) {
         return jpaQueryFactory
                 .update(user)
                 .set(user.userName, userDetail.getUserName())

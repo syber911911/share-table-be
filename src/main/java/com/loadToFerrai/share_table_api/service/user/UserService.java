@@ -1,7 +1,7 @@
 package com.loadToFerrai.share_table_api.service.user;
 
 import com.loadToFerrai.share_table_api.dto.UserDto;
-import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetail;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailBody;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.exception.ExistUserException;
@@ -25,7 +25,7 @@ public interface UserService {
     List<User> findAllUser();
     List<UserDto> findAllUserDTO();
 
-    Boolean registerUserDetail(RegisterUserDetail registerUserDetail);
+    Boolean registerUserDetail(RegisterUserDetailBody registerUserDetailBody);
 
     UserDto toDTO(User user);
     User toEntity(UserDto userDTO);
