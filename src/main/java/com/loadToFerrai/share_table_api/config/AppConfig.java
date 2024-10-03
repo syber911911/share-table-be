@@ -1,5 +1,6 @@
 package com.loadToFerrai.share_table_api.config;
 
+import com.loadToFerrai.share_table_api.util.JWTDecoder.AppleJWTUtil;
 import com.loadToFerrai.share_table_api.util.WebClient.WebClientUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -19,5 +20,10 @@ public class AppConfig {
     @Bean
     WebClientUtil webClientUtil(){
         return new WebClientUtil();
+    }
+
+    @Bean
+    AppleJWTUtil appleJWTUtil() {
+        return new AppleJWTUtil();
     }
 }

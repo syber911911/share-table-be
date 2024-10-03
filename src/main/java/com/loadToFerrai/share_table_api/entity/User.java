@@ -24,9 +24,11 @@ public class User {
     private String userAgeRange;
     private String userProfileNickname;
     private String userProfileIMG;
+    @Enumerated(EnumType.STRING)
     private Gender userGender;
     @Embedded
     private UserAgentInfo userAgentInfo;
+    @Enumerated(EnumType.STRING)
     private UserAuthorityType userAuthorityType;
 
     @Builder

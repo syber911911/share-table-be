@@ -1,7 +1,9 @@
 package com.loadToFerrai.share_table_api.service.user;
 
 import com.loadToFerrai.share_table_api.dto.UserDto;
+import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailBody;
 import com.loadToFerrai.share_table_api.entity.User;
+import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,37 +21,51 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public void signUp(User user) {
-        userRepository.save(user);
+    public UserDto signUp(User user) {
+        return toDTO(userRepository.save(user));
     }
 
     @Override
-    public Boolean validateDuplicatedUser() {
-        //todo 필요할까? Optional 검사로 하면 되지 않나 싶기도
-        return null;
+    public Boolean validateDuplicatedNickName(String nickName) {
+        return userRepository.findOptionalByUserProfileNickName(nickName).isPresent();
     }
 
     @Override
-    public User findUser(String userAgentId) {
-        return userRepository.findUserByUserAgentId(userAgentId);
+    public User findUser(UserAgentInfo userAgentInfo) {
+        return userRepository.findUserByUserAgentId(userAgentInfo);
     }
 
     @Override
-    public UserDto findUserDTO(String userAgentId) {
-        return toDTO(userRepository.findUserByUserAgentId(userAgentId));
+    public UserDto findUserDTO(UserAgentInfo userAgentInfo) {
+        return toDTO(userRepository.findUserByUserAgentId(userAgentInfo));
     }
 
     @Override
-    public Optional<User> findUserOptional(String userAgentId) {
-        return userRepository.findOptionalByUserAgentId(userAgentId);
+    public Optional<User> findUserOptional(UserAgentInfo userAgentInfo) {
+        return userRepository.findOptionalByUserAgentId(userAgentInfo);
+    }
+
+//    @Override
+//    public UserDto findUserDTOOptional(UserAgentInfo userAgentInfo) {
+//        UserDto emptyUserDTO = new UserDto();
+//        return userRepository.findOptionalByUserAgentId(userAgentInfo)
+//                .map(this::toDTO)
+//                .orElse(emptyUserDTO);
+//    }
+
+    @Override
+    public User findUserByNickName(String nickName) {
+        return userRepository.findUserByUserProfileNickName(nickName);
     }
 
     @Override
-    public UserDto findUserDTOOptional(String userAgentId) {
-        UserDto emptyUserDTO = new UserDto();
-        return userRepository.findOptionalByUserAgentId(userAgentId)
-                .map(this::toDTO)
-                .orElse(emptyUserDTO);
+    public Optional<User> findUserOptionalByNickName(String nickName) {
+        return userRepository.findOptionalByUserProfileNickName(nickName);
+    }
+
+    @Override
+    public UserDto findUserDTOByNickName(String nickName) {
+        return toDTO(userRepository.findUserByUserProfileNickName(nickName));
     }
 
     @Override
@@ -63,6 +79,12 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean registerUserDetail(RegisterUserDetailBody registerUserDetailBody) {
+        Long isSuccess = userRepository.updateUserDetail(registerUserDetailBody);
+        return isSuccess != 0;
     }
 
     @Override

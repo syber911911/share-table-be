@@ -1,10 +1,14 @@
 package com.loadToFerrai.share_table_api.repository.restaurant;
 
 
+import com.loadToFerrai.share_table_api.dto.restaurant.UpdateRestaurantInfoBody;
+import com.loadToFerrai.share_table_api.entity.QRestaurant;
 import com.loadToFerrai.share_table_api.entity.embedded.Address;
 import com.loadToFerrai.share_table_api.entity.Restaurant;
+import com.loadToFerrai.share_table_api.entity.embedded.RestaurantCategory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -26,8 +30,9 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public void save(Restaurant restaurant) {
+    public Restaurant save(Restaurant restaurant) {
         em.persist(restaurant);
+        return restaurant;
     }
 
     @Override
@@ -62,6 +67,29 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
                 .where(matchedAddressChecker(address))
                 .fetch();
         // TODO Pagination 추가 요망
+    }
+
+    @Override
+    public Long updateRestaurantInfo(UpdateRestaurantInfoBody body) {
+        return jpaQueryFactory
+                .update(restaurant)
+                .set(restaurant.address, body.getAddress())
+                .set(restaurant.restaurantCategory, body.getRestaurantCategory())
+                .set(restaurant.name, body.getName())
+                .set(restaurant.menuInfo, body.getMenuInfo())
+                .set(restaurant.imgUrl, body.getImgUrl())
+                .set(restaurant.tel, body.getTel())
+                .set(restaurant.runtime, body.getRuntime())
+                .set(restaurant.let, body.getLet())
+                .set(restaurant.lon, body.getLon())
+                .execute();
+    }
+
+    @Override
+    public Long deleteRestaurant(Long Id) {
+        return jpaQueryFactory.delete(restaurant)
+                .where(restaurant.id.eq(Id))
+                .execute();
     }
 
     private BooleanBuilder matchedAddressChecker(Address address) {

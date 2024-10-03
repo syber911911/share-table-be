@@ -12,13 +12,13 @@ public class WebClientUtil {
     private String kakaoRequestApi;
 
     public KakaoResponseDTO getKakaoUserInfo(String accessToken) {
-        WebClient kakoAuthorization = WebClient.builder()
+        WebClient kakaoAuthorization = WebClient.builder()
                 .baseUrl(kakaoRequestApi)
                 .defaultHeader("Authorization", accessToken)
                 .defaultHeader("content-type", "application/x-www-form-urlencoded;charset=UTF-8")
                 .build();
 
-        return kakoAuthorization
+        return kakaoAuthorization
                 .get()
                 .retrieve()
                 .bodyToMono(KakaoResponseDTO.class)

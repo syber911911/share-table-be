@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ResponseDto<T> {
 
-    private Boolean success;
+    private boolean success;
     private T result;
 }
