@@ -108,11 +108,11 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
     }
 
     private BooleanBuilder salesStyleEq(SalesStyle salesStyle) {
-        return nullSafeBuilder(() -> restaurant.restaurantCategory.salesStyle.eq(salesStyle.getValue()));
+        return nullSafeBuilder(() -> restaurant.restaurantCategory.salesStyle.eq(salesStyle));
     }
 
     private BooleanBuilder foodStyleEq(FoodStyle foodStyle) {
-        return nullSafeBuilder(() -> restaurant.restaurantCategory.foodStyle.eq(foodStyle.getValue()));
+        return nullSafeBuilder(() -> restaurant.restaurantCategory.foodStyle.eq(foodStyle));
     }
 
     private BooleanBuilder nameContains(String restaurantName) {
