@@ -19,9 +19,9 @@ public class QRestaurantCategory extends BeanPath<RestaurantCategory> {
 
     public static final QRestaurantCategory restaurantCategory = new QRestaurantCategory("restaurantCategory");
 
-    public final EnumPath<com.loadToFerrai.share_table_api.entity.enums.FoodStyle> foodStyle = createEnum("foodStyle", com.loadToFerrai.share_table_api.entity.enums.FoodStyle.class);
+    public final StringPath foodStyle = createString("foodStyle");
 
-    public final EnumPath<com.loadToFerrai.share_table_api.entity.enums.SalesStyle> salesStyle = createEnum("salesStyle", com.loadToFerrai.share_table_api.entity.enums.SalesStyle.class);
+    public final StringPath salesStyle = createString("salesStyle");
 
     public QRestaurantCategory(String variable) {
         super(RestaurantCategory.class, forVariable(variable));
