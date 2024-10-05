@@ -4,6 +4,7 @@ import com.loadToFerrai.share_table_api.dto.UserDto;
 import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailBody;
 import com.loadToFerrai.share_table_api.entity.User;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
+import com.loadToFerrai.share_table_api.exception.ExistUserException;
 import com.loadToFerrai.share_table_api.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findUserDTO(UserAgentInfo userAgentInfo) {
-        return toDTO(userRepository.findUserByUserAgentId(userAgentInfo));
+    public UserDto findUserDTO(UserAgentInfo userAgentInfo) throws ExistUserException {
+        User user = userRepository.findUserByUserAgentId(userAgentInfo);
+        if(user == null) {
+            throw new ExistUserException("User is not exist");
+        }
+        return toDTO(user);
     }
 
     @Override

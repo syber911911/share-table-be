@@ -2,14 +2,19 @@ package com.loadToFerrai.share_table_api.service.restaurant;
 
 
 import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantDto;
-import com.loadToFerrai.share_table_api.dto.restaurant.UpdateRestaurantInfoBody;
-import com.loadToFerrai.share_table_api.entity.embedded.Address;
+import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantSearchCondition;
+import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantInfoBody;
 import com.loadToFerrai.share_table_api.entity.Restaurant;
+import com.loadToFerrai.share_table_api.entity.embedded.Address;
 import com.loadToFerrai.share_table_api.repository.restaurant.RestaurantRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +26,27 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
     @Override
-    public RestaurantDto registerRestaurant(Restaurant restaurant) {
+    public RestaurantDto registerRestaurant(RestaurantInfoBody body) {
+        Restaurant restaurant = Restaurant.builder()
+                .address(body.getAddress())
+                .restaurantCategory(body.getRestaurantCategory())
+                .name(body.getName())
+                .menuInfo(body.getMenuInfo())
+                .imgUrl(body.getImgUrl())
+                .tel(body.getTel())
+                .let(body.getLet())
+                .lon(body.getLon())
+                .avgRatings(0)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .deletedAt(null)
+                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .build();
+
         return toDTO(restaurantRepository.save(restaurant));
     }
 
     @Override
-    public boolean updateRestaurantInfo(UpdateRestaurantInfoBody body) {
+    public boolean updateRestaurantInfo(RestaurantInfoBody body) {
         Long isSuccess = restaurantRepository.updateRestaurantInfo(body);
         return isSuccess != 0;
     }
@@ -38,33 +58,36 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant findRestaurant(Long id) {
+    public boolean existRestaurantInfo(String restaurantName, Address address) {
+        Optional<Restaurant> result = restaurantRepository.findByNameAndAddress(restaurantName, address);
+        return result.isPresent();
+    }
+
+    @Override
+    public Restaurant findPKRestaurant(Long id) {
         return restaurantRepository.findById(id);
     }
 
     @Override
-    public Optional<Restaurant> findRestaurantOptional(Long id) {
+    public Optional<Restaurant> findPKRestaurantOptional(Long id) {
         return restaurantRepository.findByIdOptional(id);
     }
 
     @Override
-    public RestaurantDto findRestaurantDTO(Long id) {
-        return toDTO(findRestaurant(id));
+    public RestaurantDto findPKRestaurantDTO(Long id) {
+        return toDTO(restaurantRepository.findById(id));
     }
 
     @Override
-    public List<Restaurant> findAllRestaurant() {
-        return restaurantRepository.findAll();
-    }
+    public Page<RestaurantDto> findRestaurantByFilter(RestaurantSearchCondition condition, Pageable pageable) {
+        Page<Restaurant> result = restaurantRepository.findByWholeCondition(condition, pageable);
 
-    @Override
-    public List<Restaurant> findRestaurantFitTheName(String restaurantName) {
-        return restaurantRepository.findByName(restaurantName);
-    }
+        List<RestaurantDto> content = result.getContent()
+                .stream()
+                .map(this::toDTO)
+                .toList();
 
-    @Override
-    public List<Restaurant> findRestaurantAddress(Address address) {
-        return restaurantRepository.findByAddress(address);
+        return new PageImpl<>(content, pageable, result.getTotalElements());
     }
 
     @Override

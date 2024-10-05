@@ -1,25 +1,27 @@
 package com.loadToFerrai.share_table_api.service.restaurant;
 
 import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantDto;
-import com.loadToFerrai.share_table_api.dto.restaurant.UpdateRestaurantInfoBody;
-import com.loadToFerrai.share_table_api.entity.embedded.Address;
+import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantSearchCondition;
+import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantInfoBody;
 import com.loadToFerrai.share_table_api.entity.Restaurant;
+import com.loadToFerrai.share_table_api.entity.embedded.Address;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface RestaurantService {
-    RestaurantDto registerRestaurant(Restaurant restaurant);
-    boolean updateRestaurantInfo(UpdateRestaurantInfoBody body);
+    RestaurantDto registerRestaurant(RestaurantInfoBody body);
+    boolean updateRestaurantInfo(RestaurantInfoBody body);
     boolean deleteRestaurantInfo(Long restaurantId);
+    boolean existRestaurantInfo(String restaurantName, Address address);
 
-    Restaurant findRestaurant(Long id);
-    Optional<Restaurant> findRestaurantOptional(Long id);
-    RestaurantDto findRestaurantDTO(Long id);
+    Restaurant findPKRestaurant(Long id);
+    Optional<Restaurant> findPKRestaurantOptional(Long id);
+    RestaurantDto findPKRestaurantDTO(Long id);
 
-    List<Restaurant> findAllRestaurant();
-    List<Restaurant> findRestaurantFitTheName(String restaurantName);
-    List<Restaurant> findRestaurantAddress(Address address);
+    Page<RestaurantDto> findRestaurantByFilter(RestaurantSearchCondition condition, Pageable pageable);
+
 
     RestaurantDto toDTO(Restaurant restaurant);
 }

@@ -1,16 +1,21 @@
 package com.loadToFerrai.share_table_api.repository.restaurant;
 
 
-import com.loadToFerrai.share_table_api.dto.restaurant.UpdateRestaurantInfoBody;
-import com.loadToFerrai.share_table_api.entity.QRestaurant;
+import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantSearchCondition;
+import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantInfoBody;
 import com.loadToFerrai.share_table_api.entity.embedded.Address;
 import com.loadToFerrai.share_table_api.entity.Restaurant;
 import com.loadToFerrai.share_table_api.entity.embedded.RestaurantCategory;
+import com.loadToFerrai.share_table_api.entity.enums.FoodStyle;
+import com.loadToFerrai.share_table_api.entity.enums.SalesStyle;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,8 +25,9 @@ import static com.loadToFerrai.share_table_api.entity.QRestaurant.restaurant;
 import static com.loadToFerrai.share_table_api.repository.QueryDSLUtil.nullSafeBuilder;
 
 // https://velog.io/@balparang/Querydsl-BooleanExpression-%EB%A5%BC-%EC%A1%B0%ED%95%A9%ED%95%A0-%EB%95%8C-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-NPE-%EB%8C%80%EC%B2%98%ED%95%98%EA%B8%B0
-// booleanBuilder Null-Safe
+// -> booleanBuilder Null-Safe
 
+// https://sungtae-kim.tistory.com/76 -> 한글 정렬
 @Repository
 @RequiredArgsConstructor
 public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
@@ -46,31 +52,35 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
     }
 
     @Override
-    public List<Restaurant> findAll() {
-        return jpaQueryFactory
+    public Optional<Restaurant> findByNameAndAddress(String name, Address address) {
+        return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(restaurant)
-                .fetch();
+                .where(restaurant.name.eq(name)
+                        .and(addressBuilder(address)))
+                .fetchOne());
     }
 
     @Override
-    public List<Restaurant> findByName(String restaurantName) {
-        return jpaQueryFactory
+    public Page<Restaurant> findByWholeCondition(RestaurantSearchCondition condition, Pageable pageable) {
+        List<Restaurant> content = jpaQueryFactory
                 .selectFrom(restaurant)
-                .where(restaurant.name.contains(restaurantName))
+                .where(addressBuilder(condition.getRestaurantAddress())
+                        .and(categoryBuilder(condition.getRestaurantCategory()))
+                        .and(nameContains(condition.getRestaurantName())))
                 .fetch();
+
+        JPAQuery<Long> count = jpaQueryFactory
+                .select(restaurant.count())
+                .from(restaurant)
+                .where(addressBuilder(condition.getRestaurantAddress())
+                        .and(categoryBuilder(condition.getRestaurantCategory()))
+                        .and(nameContains(condition.getRestaurantName())));
+
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchOne);
     }
 
     @Override
-    public List<Restaurant> findByAddress(Address address) {
-        return jpaQueryFactory
-                .selectFrom(restaurant)
-                .where(matchedAddressChecker(address))
-                .fetch();
-        // TODO Pagination 추가 요망
-    }
-
-    @Override
-    public Long updateRestaurantInfo(UpdateRestaurantInfoBody body) {
+    public Long updateRestaurantInfo(RestaurantInfoBody body) {
         return jpaQueryFactory
                 .update(restaurant)
                 .set(restaurant.address, body.getAddress())
@@ -92,7 +102,24 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
                 .execute();
     }
 
-    private BooleanBuilder matchedAddressChecker(Address address) {
+    private BooleanBuilder categoryBuilder(RestaurantCategory category) {
+        return foodStyleEq(category.getFoodStyle())
+                .and(salesStyleEq(category.getSalesStyle()));
+    }
+
+    private BooleanBuilder salesStyleEq(SalesStyle salesStyle) {
+        return nullSafeBuilder(() -> restaurant.restaurantCategory.salesStyle.eq(salesStyle.getValue()));
+    }
+
+    private BooleanBuilder foodStyleEq(FoodStyle foodStyle) {
+        return nullSafeBuilder(() -> restaurant.restaurantCategory.foodStyle.eq(foodStyle.getValue()));
+    }
+
+    private BooleanBuilder nameContains(String restaurantName) {
+        return nullSafeBuilder(() -> restaurant.name.contains(restaurantName));
+    }
+
+    private BooleanBuilder addressBuilder(Address address) {
         return doContains(address.getDoName())
                 .and(siContains(address.getSiName()))
                 .and(roadContains(address.getRoadName()))

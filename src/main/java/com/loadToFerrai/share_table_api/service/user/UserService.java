@@ -12,11 +12,11 @@ import java.util.Optional;
 public interface UserService {
 
     UserDto signUp(User user);
-    Boolean validateDuplicatedNickName(String nickName) throws ExistUserException;
+    Boolean validateDuplicatedNickName(String nickName);
 
     User findUser(UserAgentInfo userAgentInfo);
     Optional<User> findUserOptional(UserAgentInfo userAgentInfo);
-    UserDto findUserDTO(UserAgentInfo userAgentInfo);
+    UserDto findUserDTO(UserAgentInfo userAgentInfo) throws ExistUserException;
 
     User findUserByNickName(String nickName);
     Optional<User> findUserOptionalByNickName(String nickName);

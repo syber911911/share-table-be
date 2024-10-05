@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateRestaurantInfoBody {
+public class RestaurantInfoBody {
 
     @Embedded
     private Address address;
