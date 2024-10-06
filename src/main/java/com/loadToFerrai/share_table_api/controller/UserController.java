@@ -7,7 +7,8 @@ import com.loadToFerrai.share_table_api.dto.authorizationDto.RegisterUserDetailB
 import com.loadToFerrai.share_table_api.dto.authorizationDto.RequestUserInfoBody;
 import com.loadToFerrai.share_table_api.entity.embedded.UserAgentInfo;
 import com.loadToFerrai.share_table_api.entity.User;
-import com.loadToFerrai.share_table_api.exception.ExistUserException;
+import com.loadToFerrai.share_table_api.exception.ExistDataException;
+import com.loadToFerrai.share_table_api.exception.NotFoundDataException;
 import com.loadToFerrai.share_table_api.service.user.UserService;
 import com.loadToFerrai.share_table_api.util.JWTDecoder.AppleJWTUtil;
 import com.loadToFerrai.share_table_api.util.WebClient.WebClientUtil;
@@ -28,7 +29,7 @@ public class UserController {
     private final AppleJWTUtil appleJWTUtil;
 
     @GetMapping("/info")
-    public ResponseEntity<ResponseDto> getUserInfo(@RequestBody RequestUserInfoBody requestUserInfoBody) throws ExistUserException {
+    public ResponseEntity<ResponseDto> getUserInfo(@RequestBody RequestUserInfoBody requestUserInfoBody) throws NotFoundDataException {
         UserDto userDTO = userService.findUserDTO(requestUserInfoBody.getUserAgentInfo());
 
         return ResponseEntity.ok()
@@ -38,7 +39,7 @@ public class UserController {
 
     @PostMapping("/signUp")
     public ResponseEntity<ResponseDto> signUpAndLogin(
-            @RequestBody @Valid LoginRequestBody requestBody) throws ExistUserException {
+            @RequestBody @Valid LoginRequestBody requestBody){
         UserDto findUser = userService.findUserDTO(requestBody.getUserAgentInfo());
 
         if (findUser.getUserAgentInfo() == null) {
@@ -73,7 +74,7 @@ public class UserController {
 
     @PostMapping("/registerDetail")
     public ResponseEntity<ResponseDto> registerUserDetail(
-            @RequestBody @Valid RegisterUserDetailBody registerUserDetailBody) throws ExistUserException {
+            @RequestBody @Valid RegisterUserDetailBody registerUserDetailBody) throws NotFoundDataException {
 
         Boolean isSuccess = userService.registerUserDetail(registerUserDetailBody);
 
