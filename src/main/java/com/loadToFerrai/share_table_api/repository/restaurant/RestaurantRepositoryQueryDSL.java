@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,6 +100,14 @@ public class RestaurantRepositoryQueryDSL implements RestaurantRepository {
     public Long deleteRestaurant(Long Id) {
         return jpaQueryFactory.delete(restaurant)
                 .where(restaurant.id.eq(Id))
+                .execute();
+    }
+
+    @Override
+    public Long readyToDeleteRestaurant(Long id) {
+        return jpaQueryFactory.update(restaurant)
+                .set(restaurant.deletedAt, new Timestamp(System.currentTimeMillis()))
+                .where(restaurant.id.eq(id))
                 .execute();
     }
 

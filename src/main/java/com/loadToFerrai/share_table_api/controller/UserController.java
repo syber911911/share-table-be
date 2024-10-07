@@ -61,11 +61,7 @@ public class UserController {
     public ResponseEntity<ResponseDto> duplicatedUserNameChecker(
             @RequestParam("userName") @Length(max = 8) @Length(min = 2) String userName){
 
-        if (userService.validateDuplicatedNickName(userName)) {
-            return ResponseEntity.ok()
-                    .headers(getHeaders())
-                    .body(new ResponseDto<>(false, "사용할 수 없는 닉네임 입니다."));
-        }
+        userService.validateDuplicatedNickName(userName);
 
         return ResponseEntity.ok()
                 .headers(getHeaders())
@@ -76,18 +72,13 @@ public class UserController {
     public ResponseEntity<ResponseDto> registerUserDetail(
             @RequestBody @Valid RegisterUserDetailBody registerUserDetailBody) throws NotFoundDataException {
 
-        Boolean isSuccess = userService.registerUserDetail(registerUserDetailBody);
+        userService.registerUserDetail(registerUserDetailBody);
 
-        if (!isSuccess) {
-            return ResponseEntity.badRequest()
-                    .headers(getHeaders())
-                    .body(new ResponseDto<String>(false, "업데이트에 실패했습니다."));
-        }
 
         UserDto userDTO = userService.findUserDTO(registerUserDetailBody.getUserAgentInfo());
 
         return ResponseEntity.ok()
                 .headers(getHeaders())
-                .body(new ResponseDto<UserDto>(true, userDTO));
+                .body(new ResponseDto<>(true, userDTO));
     }
 }

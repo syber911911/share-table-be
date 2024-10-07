@@ -74,7 +74,7 @@ public class UserRepositoryQueryDSL implements UserRepository {
                 .set(user.userProfileIMG, userDetail.getUserProfileIMG())
                 .set(user.userGender, userDetail.getUserGender())
                 .where(user.userAgentInfo.userAgentId.eq(userDetail.getUserAgentInfo().getUserAgentId())
-                        .and(user.userAgentInfo.userAgentId.eq(userDetail.getUserAgentInfo().getUserAgentType().getValue())))
+                        .and(user.userAgentInfo.userAgentType.eq(userDetail.getUserAgentInfo().getUserAgentType())))
                 .execute();
 
     }

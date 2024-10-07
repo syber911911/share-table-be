@@ -28,8 +28,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean validateDuplicatedNickName(String nickName) {
-        return userRepository.findOptionalByUserProfileNickName(nickName).isPresent();
+    public void validateDuplicatedNickName(String nickName) throws ExistDataException {
+//        return userRepository.findOptionalByUserProfileNickName(nickName).isPresent();
+        userRepository.findOptionalByUserProfileNickName(nickName)
+                .ifPresent(nick -> {
+                    throw new ExistDataException(nickName + "는 이미 존재하는 닉네임 입니다.");
+                });
     }
 
     @Override
@@ -88,9 +92,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean registerUserDetail(RegisterUserDetailBody registerUserDetailBody) {
-        Long isSuccess = userRepository.updateUserDetail(registerUserDetailBody);
-        return isSuccess != 0;
+    public void registerUserDetail(RegisterUserDetailBody registerUserDetailBody) throws IllegalArgumentException{
+        Long successCount = userRepository.updateUserDetail(registerUserDetailBody);
+        if (successCount == 0) throw new IllegalArgumentException("Check User Info");
     }
 
     @Override

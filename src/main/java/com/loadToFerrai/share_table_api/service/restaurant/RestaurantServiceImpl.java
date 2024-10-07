@@ -6,6 +6,7 @@ import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantSearchCondition
 import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantInfoBody;
 import com.loadToFerrai.share_table_api.entity.Restaurant;
 import com.loadToFerrai.share_table_api.entity.embedded.Address;
+import com.loadToFerrai.share_table_api.exception.ExistDataException;
 import com.loadToFerrai.share_table_api.repository.restaurant.RestaurantRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -58,9 +59,17 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public boolean existRestaurantInfo(String restaurantName, Address address) {
-        Optional<Restaurant> result = restaurantRepository.findByNameAndAddress(restaurantName, address);
-        return result.isPresent();
+    public Long inactivateRestaurant(Long restaurantId) throws IllegalArgumentException{
+        Long successCount = restaurantRepository.readyToDeleteRestaurant(restaurantId);
+        if (restaurantId == null || restaurantId <= 0) throw new IllegalArgumentException("IllegalArgument. Please Change Args");
+
+        return successCount;
+    }
+
+    @Override
+    public void existRestaurantInfo(String restaurantName, Address address) throws ExistDataException {
+        restaurantRepository.findByNameAndAddress(restaurantName, address)
+                .orElseThrow( () -> new ExistDataException("Data does Already"));
     }
 
     @Override

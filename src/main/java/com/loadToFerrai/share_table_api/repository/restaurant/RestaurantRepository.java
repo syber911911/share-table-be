@@ -21,5 +21,6 @@ public interface RestaurantRepository {
 
     Long updateRestaurantInfo(RestaurantInfoBody body);
     Long deleteRestaurant(Long Id);
+    Long readyToDeleteRestaurant(Long Id);
     // TODO 식당 리스트 페이징 추가해야함
 }

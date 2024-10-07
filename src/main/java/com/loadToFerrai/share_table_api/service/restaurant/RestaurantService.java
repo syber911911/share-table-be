@@ -5,6 +5,7 @@ import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantSearchCondition
 import com.loadToFerrai.share_table_api.dto.restaurant.RestaurantInfoBody;
 import com.loadToFerrai.share_table_api.entity.Restaurant;
 import com.loadToFerrai.share_table_api.entity.embedded.Address;
+import com.loadToFerrai.share_table_api.exception.ExistDataException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,7 +15,9 @@ public interface RestaurantService {
     RestaurantDto registerRestaurant(RestaurantInfoBody body);
     boolean updateRestaurantInfo(RestaurantInfoBody body);
     boolean deleteRestaurantInfo(Long restaurantId);
-    boolean existRestaurantInfo(String restaurantName, Address address);
+    Long inactivateRestaurant(Long restaurantId) throws IllegalArgumentException;
+
+    void existRestaurantInfo(String restaurantName, Address address) throws ExistDataException;
 
     Restaurant findPKRestaurant(Long id);
     Optional<Restaurant> findPKRestaurantOptional(Long id);

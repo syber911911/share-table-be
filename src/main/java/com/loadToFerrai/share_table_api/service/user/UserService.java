@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface UserService {
 
     UserDto signUp(User user);
-    Boolean validateDuplicatedNickName(String nickName);
+    void validateDuplicatedNickName(String nickName) throws ExistDataException;
 
     User findUser(UserAgentInfo userAgentInfo);
     Optional<User> findUserOptional(UserAgentInfo userAgentInfo);
@@ -26,7 +26,7 @@ public interface UserService {
     List<User> findAllUser();
     List<UserDto> findAllUserDTO();
 
-    Boolean registerUserDetail(RegisterUserDetailBody registerUserDetailBody);
+    void registerUserDetail(RegisterUserDetailBody registerUserDetailBody) throws IllegalArgumentException;
 
     UserDto toDTO(User user);
     User toEntity(UserDto userDTO);

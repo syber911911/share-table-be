@@ -27,7 +27,7 @@ public class RestaurantController {
 
         return ResponseEntity.ok()
                 .headers(getHeaders())
-                .body(new ResponseDto<RestaurantDto>(true, result));
+                .body(new ResponseDto<>(true, result));
     }
 
     @GetMapping("/info")
@@ -41,18 +41,21 @@ public class RestaurantController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto> registerRestaurant(@RequestBody RestaurantInfoBody body) {
-        boolean isExist = restaurantService.existRestaurantInfo(body.getName(), body.getAddress());
-
-        if (isExist) {
-            return ResponseEntity.badRequest()
-                    .headers(getHeaders())
-                    .body(new ResponseDto<String>(false, "이미 존재하는 식당입니다."));
-        }
+        restaurantService.existRestaurantInfo(body.getName(), body.getAddress());
 
         RestaurantDto restaurantDto = restaurantService.registerRestaurant(body);
         return ResponseEntity.ok()
                 .headers(getHeaders())
-                .body(new ResponseDto<RestaurantDto>(true, restaurantDto));
+                .body(new ResponseDto<>(true, restaurantDto));
+    }
+
+    @PostMapping("/inactivation")
+    public ResponseEntity<ResponseDto> readyToDelete(@RequestParam("restaurantId")Long restaurantId) {
+        Long result = restaurantService.inactivateRestaurant(restaurantId);
+
+        return ResponseEntity.ok()
+                .headers(getHeaders())
+                .body(new ResponseDto<>(true, String.format("%d건 삭제 성공",result)));
     }
 
 
