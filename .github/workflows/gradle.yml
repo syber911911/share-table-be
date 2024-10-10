@@ -55,7 +55,11 @@ jobs:
       with:
         images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
         tags: |
-          type=sha, format=short
+          type=sha
+
+    - name: Print Docker tags
+      run: |
+        echo "Docker tags: ${{ steps.docker_meta.outputs.tags}}"
 
     - name: Build and Push Docker image
       uses: docker/build-push-action@v2
