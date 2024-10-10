@@ -54,6 +54,8 @@ jobs:
       uses: docker/metadata-action@v2
       with:
         images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+        tags: |
+          type=latest,event=main,replace=/,-
 
     - name: Build and Push Docker image
       uses: docker/build-push-action@v2
