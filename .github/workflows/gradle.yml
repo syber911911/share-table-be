@@ -53,8 +53,7 @@ jobs:
       id: docker_meta
       uses: docker/metadata-action@v5
       with:
-        images: syber911911/share_table_be
-#        images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+        images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
         tags: |
           type=sha
 
