@@ -57,6 +57,11 @@ jobs:
         tags: |
           type=sha
 
+    - name: Print Docker metadata
+      run: |
+        echo "Docker tags ${{steps.docker_meta.outputs.tags}}"
+        echo "Docker images ${{steps.docker_meta.outputs.images}}"
+
     - name: Build and Push Docker image
       uses: docker/build-push-action@v5
       with:
