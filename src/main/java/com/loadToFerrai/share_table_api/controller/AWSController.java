@@ -13,7 +13,7 @@ public class AWSController {
 
         ResponseDto<Object> responseDTO = new ResponseDto<>();
         responseDTO.setSuccess(true);
-        responseDTO.setResult("AWS Health Check!");
+        responseDTO.setResult("Share Table Server Healthy");
 
         return ResponseEntity.ok(responseDTO);
     }
