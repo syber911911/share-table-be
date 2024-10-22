@@ -5,7 +5,7 @@ IMAGE_NAME="syber911911/share_table_be:latest"
 
 # Docker 이미지 pull
 echo "Docker 이미지를 pull 하고 있습니다: $IMAGE_NAME"
-docker pull $IMAGE_NAME
+sudo docker pull $IMAGE_NAME
 
 # 결과 확인
 if [ $? -eq 0 ]; then
