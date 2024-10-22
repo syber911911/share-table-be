@@ -3,7 +3,7 @@ IMAGE_NAME="syber911911/share_table_be:latest"
 
 # 컨테이너 실행
 echo "컨테이너를 실행합니다: $IMAGE_NAME"
-docker run -d \
+sudo docker run -d \
     --name sharetable-server \
     -p 80:8080 \
     $IMAGE_NAME
