@@ -38,7 +38,7 @@ jobs:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-      run: ./gradlew clean build # clean build or Q class ignore
+      run: ./gradlew clean build --info # clean build or Q class ignore
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -67,9 +67,7 @@ jobs:
         file: ./Dockerfile
         platforms: linux/amd64, linux/arm64
         push: true
-        tags: |
-          ${{ steps.docker_meta.outputs.tags }}
-          ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
         labels: ${{ steps.docker_meta.outputs.labels }}
 
 #  deploy:
