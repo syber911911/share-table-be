@@ -67,7 +67,9 @@ jobs:
         file: ./Dockerfile
         platforms: linux/amd64, linux/arm64
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
+        tags: |
+          ${{ steps.docker_meta.outputs.tags }}
+          ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
         labels: ${{ steps.docker_meta.outputs.labels }}
 
 #  deploy:
